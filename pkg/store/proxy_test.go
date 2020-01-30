@@ -985,6 +985,8 @@ type storeSeriesServer struct {
 
 	SeriesSet []storepb.Series
 	Warnings  []string
+
+	Size int64
 }
 
 func newStoreSeriesServer(ctx context.Context) *storeSeriesServer {
@@ -992,6 +994,8 @@ func newStoreSeriesServer(ctx context.Context) *storeSeriesServer {
 }
 
 func (s *storeSeriesServer) Send(r *storepb.SeriesResponse) error {
+	s.Size += int64(r.Size())
+
 	if r.GetWarning() != "" {
 		s.Warnings = append(s.Warnings, r.GetWarning())
 		return nil
